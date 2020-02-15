@@ -1,0 +1,109 @@
+1、DAO（database access objec）提供database的接口，database抽象类，entity(实体）包含数据库的各种字段属性主键的定义。
+2、数据库操作一般放在副线程，主线程操作会给用户带来很高的延迟感
+3、volatile关键字让变量每次在使用的时候，都从主存中取。而不是从各个线程的“工作内存”，即永远保持最新状态。
+4、volatile具有synchronized关键字的“可见性”，但是没有synchronized关键字的“并发正确性”，也就是说不保证线程执行的有序性。
+也就是说，volatile变量对于每次使用，线程都能得到当前volatile变量的最新值。但是volatile变量并不保证并发的正确性。
+5、synchronized关键字防止冲突，用于单例模式，永远只会创建一个实例。
+6、建立一个repository来获取数据，与数据有关的定义方法和类都放在repository中，这样做可以做到降低耦合性的效果，代码简洁易于维护
+7、livedata（变化的数据） asynctask（副线程操作） viewmodel（管理数据） repository（获取数据保存数据）
+8、总结：为了使mainactivity只直接操作界面相关，不直接管理数据
+
+
+单例模式（singleton）：
+懒汉模式
+线程不安全，延迟初始化，严格意义上不是不是单例模式
+
+public class Singleton {  
+    private static Singleton instance;  
+    private Singleton (){}  
+  
+    public static Singleton getInstance() {  
+    if (instance == null) {  
+        instance = new Singleton();  
+    }  
+    return instance;  
+    }  
+}
+
+饿汉模式
+线程安全，比较常用，但容易产生垃圾，因为一开始就初始化
+
+
+public class Singleton {  
+    private static Singleton instance = new Singleton();  
+    private Singleton (){}  
+    public static Singleton getInstance() {  
+    return instance;  
+    }  
+}
+
+
+双重锁模式
+线程安全，延迟初始化。这种方式采用双锁机制，安全且在多线程情况下能保持高性能。
+
+public class Singleton {  
+    private volatile static Singleton singleton;  
+    private Singleton (){}  
+    public static Singleton getSingleton() {  
+    if (singleton == null) {  
+        synchronized (Singleton.class) {  
+        if (singleton == null) {  
+            singleton = new Singleton();  
+        }  
+        }  
+    }  
+    return singleton;  
+    }  
+}
+双重检查模式，进行了两次的判断，第一次是为了避免不要的实例，第二次是为了进行同步，避免多线程问题。由于singleton=new Singleton()
+对象的创建在JVM中可能会进行重排序，在多线程访问下存在风险，使用volatile修饰signleton实例变量有效，解决该问题。
+
+静态内部类单例模式
+
+public class Singleton { 
+    private Singleton(){
+    }
+      public static Singleton getInstance(){  
+        return Inner.instance;  
+    }  
+    private static class Inner {  
+        private static final Singleton instance = new Singleton();  
+    }  
+} 
+
+只有第一次调用getInstance方法时，虚拟机才加载 Inner 并初始化instance ，只有一个线程可以获得对象的初始化锁，
+其他线程无法进行初始化，保证对象的唯一性。目前此方式是所有单例模式中最推荐的模式，但具体还是根据项目选择。
+枚举单例模式
+
+public enum Singleton {
+    INSTANCE;
+}
+默认枚举实例的创建是线程安全的，并且在任何情况下都是单例。实际上
+
+枚举类隐藏了私有的构造器。
+枚举类的域 是相应类型的一个实例对象
+那么枚举类型日常用例是这样子的：
+public enum Singleton  {
+    INSTANCE 
+ 
+    //doSomething 该实例支持的行为
+      
+    //可以省略此方法，通过Singleton.INSTANCE进行操作
+    public static Singleton get Instance() {
+        return Singleton.INSTANCE;
+    }
+}
+枚举单例模式在《Effective Java》中推荐的单例模式之一。但枚举实例在日常开发是很少使用的，就是很简单以导致可读性较差。
+在以上所有的单例模式中，推荐静态内部类单例模式。主要是非常直观，即保证线程安全又保证唯一性。
+众所周知，单例模式是创建型模式，都会新建一个实例。那么一个重要的问题就是反序列化。
+当实例被写入到文件到反序列化成实例时，我们需要重写readResolve方法，以让实例唯一。
+
+private Object readResolve() throws ObjectStreamException{
+        return singleton;
+}
+
+
+作者：GitCode8
+链接：https://www.jianshu.com/p/3bfd916f2bb2
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
