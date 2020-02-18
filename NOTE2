@@ -1,0 +1,5 @@
+1、在内部类中用static关键词防止内存泄漏
+2、在oncreateviewholder中return自定义的viewholder。
+3、position即在列表中的位置，从0开始
+4、在bindingViewholder中设置点击监听器
+5、启动activity需要创建intent holder.itemview.getcontext.startactivity(intent)启动activity
