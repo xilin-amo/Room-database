@@ -3,3 +3,8 @@
 3、position即在列表中的位置，从0开始
 4、在bindingViewholder中设置点击监听器
 5、启动activity需要创建intent holder.itemview.getcontext.startactivity(intent)启动activity
+6、asynctask（副线程）可以重载onpostexecute将结果返回给主线程,progressupdate可以更新副线程进度
+7、adapter.java(里面写一个viewholder)为recycleview的管理器,static类继承于recycleview.adapter
+8、margin为cardview的填充属性,clickable为点击反馈
+
+fallbackdestroymigration为破坏式的清空数据库重新生成
