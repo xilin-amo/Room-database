@@ -1,0 +1,6 @@
+数据库中没有布尔值，只能用integer存储
+holder.控件.setinvicibility(View.gone) 设置控件是否消失(gone),隐藏则是(inviciable)
+holder.控件.setcheckd(true|false) 检查控件状态
+改完之后还要用viewmodel的updatewords更新界面
+在初始化设置之前先把监听器设置为空，不然初始改动就会触发监听器代码
+刷新界面时要防止多次刷新，一种解决办法是判断myadater的itemcount长度和word长度是否相等
